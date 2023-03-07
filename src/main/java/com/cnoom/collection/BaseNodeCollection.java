@@ -4,69 +4,157 @@ import com.cnoom.node.BaseNode;
 import lombok.Getter;
 import lombok.NonNull;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.TreeSet;
+import java.util.HashMap;
 
 public class BaseNodeCollection<T extends BaseNode> {
-    private final ArrayList<Integer> orderArr = new ArrayList<>();
-    protected NodeTreeSet alwaysCollection = new NodeTreeSet();
-    protected NodeTreeSet onceCollection = new NodeTreeSet();
+    protected NodeArray alwaysCollection = new NodeArray();
+    protected NodeArray onceCollection = new NodeArray();
+    protected HashMap<String, String> swapMap = new HashMap<>();
     @Getter
-    private int order = 0;
+    private int priority = 0;
 
     public boolean addNode(String tag, boolean isOnce, @NonNull T t) {
-        return addNode(tag, order++, isOnce, t);
+        return addNode(tag, priority++, isOnce, t);
     }
 
     /**
      * 按指定顺序添加事件
-     * NullPointerException – 禁止序号相同
+     * <br/>序号相同时自然顺序添加，同优先级的事件一次性事件执行始终在前
      */
     public boolean addNode(String tag, int order, boolean isOnce, @NonNull T t) {
-        if(hasOrder(order)){
-            throw new NullPointerException();
-        }
         t.setTag(tag);
-        t.setOrder(order);
+        t.setPriority(order);
         t.setOnce(isOnce);
-        this.order = this.order < order ? order : this.order;
+        this.priority = this.priority < order ? order : this.priority;
         boolean effective;
         if (t.isOnce()) {
             effective = onceCollection.add(t);
         } else {
             effective = alwaysCollection.add(t);
         }
-        if (effective) {
-            orderArr.add(order);
-        }
         return effective;
     }
 
-    public boolean hasOrder(int order) {
-        return orderArr.contains(order);
+    public T getNodeByTag(String tag) {
+        for (T t : onceCollection) {
+            if (t.getTag().equals(tag)) {
+                return t;
+            }
+        }
+        for (T t : alwaysCollection) {
+            if (t.getTag().equals(tag)) {
+                return t;
+            }
+        }
+        throw new NullPointerException("Tag not found in collection! tag[" + tag + "]");
+    }
+
+    public boolean containNode(T t) {
+        if (!onceCollection.contains(t)) {
+            return alwaysCollection.contains(t);
+        }
+        return true;
+    }
+
+    public boolean containTagNode(String tag) {
+        for (T t : onceCollection) {
+            if (t.getTag().equals(tag)) {
+                return true;
+            }
+        }
+        for (T t : alwaysCollection) {
+            if (t.getTag().equals(tag)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean removeNode(T t) {
         boolean effective = alwaysCollection.remove(t);
-        if (effective) {
-            orderArr.remove(t.getOrder());
+        if (!effective) {
+            effective = onceCollection.remove(t);
         }
         return effective;
     }
 
     /**
-     * 获取唤醒时最后的新排序集合(once集合自动清空)
+     * 根据Tag交互指定的node
+     * <br> 每个node只可被交换一次
      */
-    protected NodeTreeSet getInvokeCollection() {
-        NodeTreeSet nodeTreeSet = new NodeTreeSet();
-        nodeTreeSet.addAll(onceCollection);
-        nodeTreeSet.addAll(alwaysCollection);
-        onceCollection.clear();
-        return nodeTreeSet;
+    public boolean swapByTag(String tag1, String tag2) {
+        if (swapMap.containsKey(tag1) || swapMap.containsKey(tag2)) {
+            return false;
+        }
+        if (swapMap.containsValue(tag1) || swapMap.containsValue(tag2)) {
+            return false;
+        }
+        swapMap.put(tag1, tag2);
+        return true;
     }
 
-    protected class NodeTreeSet extends TreeSet<T> {
+    public boolean removeNodeByTag(String tag) {
+        T node = null;
+        for (T t : onceCollection) {
+            if (t.getTag().equals(tag)) {
+                node = t;
+            }
+        }
+        if (node != null) {
+            return onceCollection.remove(node);
+        }
 
+        for (T t : alwaysCollection) {
+            if (t.getTag().equals(tag)) {
+                node = t;
+            }
+        }
+        return alwaysCollection.remove(node);
+    }
+
+
+    /**
+     * 获取唤醒时最后的新排序集合(once集合自动清空)
+     */
+    protected NodeArray getInvokeCollection() {
+        NodeArray nodeArray = new NodeArray();
+        nodeArray.addAll(onceCollection);
+        nodeArray.addAll(alwaysCollection);
+        onceCollection.clear();
+        arraySort(nodeArray);
+        return nodeArray;
+    }
+
+    private void arraySort(NodeArray array) {
+        //sort
+        for (int i = 0; i < array.size(); i++) {
+            for (int j = i; j > 0; j--) {
+                if (array.get(j).compareTo(array.get(j - 1)) < 0) {
+                    array.swap(j, j - 1);
+                } else {
+                    break;
+                }
+            }
+        }
+        //swap
+        for (String s : swapMap.keySet()) {
+            array.swap(s, swapMap.get(s));
+        }
+        swapMap.clear();
+    }
+
+    protected class NodeArray extends ArrayList<T> {
+        protected void swap(int i, int j) {
+            T t = get(i);
+            set(i, get(j));
+            set(j, t);
+        }
+
+        protected void swap(String tag1, String tag2) {
+            T t1 = getNodeByTag(tag1);
+            T t2 = getNodeByTag(tag2);
+            swap(this.indexOf(t1), this.indexOf(t2));
+        }
     }
 }
