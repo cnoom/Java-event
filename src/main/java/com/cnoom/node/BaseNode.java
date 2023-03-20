@@ -6,10 +6,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public abstract class BaseNode implements BaseEvent,Comparable<BaseNode> {
+public abstract class BaseNode implements BaseEvent, Comparable<BaseNode> {
     protected boolean isOnce;
     protected int priority;
-    protected String tag ="";
+    protected String tag = "";
+
     @Override
     public int compareTo(BaseNode o) {
         return Integer.compare(priority, o.priority);

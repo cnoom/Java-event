@@ -19,7 +19,7 @@ public class EventNodeFactory {
         return new EventNode2Arg<>(event);
     }
 
-    public static <T1, T2,T3> EventNode3Arg<T1, T2,T3> createEventNode2Arg(Event3Arg<T1, T2,T3> event) {
+    public static <T1, T2, T3> EventNode3Arg<T1, T2, T3> createEventNode2Arg(Event3Arg<T1, T2, T3> event) {
         return new EventNode3Arg<>(event);
     }
 }

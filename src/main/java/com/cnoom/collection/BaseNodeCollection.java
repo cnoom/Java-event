@@ -14,15 +14,31 @@ public class BaseNodeCollection<T extends BaseNode> {
     @Getter
     private int priority = 0;
 
-    public boolean addNode(String tag, boolean isOnce, @NonNull T t) {
+    public boolean addNode(T t) {
+        return addNode("default", priority++, false, t);
+    }
+
+    public boolean addNode(boolean isOnce, T t) {
+        return addNode("default", priority++, isOnce, t);
+    }
+
+    public boolean addNode(int priority, T t) {
+        return addNode("default", priority, false, t);
+    }
+
+    public boolean addNode(String tag, boolean isOnce, T t) {
         return addNode(tag, priority++, isOnce, t);
+    }
+
+    public boolean addNode(int priority, boolean isOnce, T t) {
+        return addNode("default", priority, isOnce, t);
     }
 
     /**
      * 按指定顺序添加事件
      * <br/>序号相同时自然顺序添加，同优先级的事件一次性事件执行始终在前
      */
-    public boolean addNode(String tag, int order, boolean isOnce, @NonNull T t) {
+    public boolean addNode(@NonNull String tag, int order, boolean isOnce, @NonNull T t) {
         t.setTag(tag);
         t.setPriority(order);
         t.setOnce(isOnce);
@@ -77,6 +93,10 @@ public class BaseNodeCollection<T extends BaseNode> {
             effective = onceCollection.remove(t);
         }
         return effective;
+    }
+
+    public int size() {
+        return alwaysCollection.size() + onceCollection.size();
     }
 
     /**
