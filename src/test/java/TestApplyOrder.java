@@ -24,4 +24,15 @@ public class TestApplyOrder extends TestBasic {
         e.invoke();
         Assertions.assertEquals(3, value);
     }
+
+    @Test
+    public void swap(){
+        e.addNode("a",2,strANode());
+        e.addNode("b",1,strBNode());
+        e.invoke();
+        Assertions.assertEquals("BA", stringBuilder.toString());
+        e.swapByTag("a","b");
+        e.invoke();
+        Assertions.assertEquals("BAAB", stringBuilder.toString());
+    }
 }

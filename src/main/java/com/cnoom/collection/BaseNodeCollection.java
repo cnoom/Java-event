@@ -29,7 +29,9 @@ public class BaseNodeCollection<T extends BaseNode> {
     public boolean addNode(String tag, boolean isOnce, T t) {
         return addNode(tag, priority++, isOnce, t);
     }
-
+    public boolean addNode(String tag, int priority, T t) {
+        return addNode(tag, priority, false, t);
+    }
     public boolean addNode(int priority, boolean isOnce, T t) {
         return addNode("default", priority, isOnce, t);
     }
@@ -141,8 +143,8 @@ public class BaseNodeCollection<T extends BaseNode> {
         NodeArray nodeArray = new NodeArray();
         nodeArray.addAll(onceCollection);
         nodeArray.addAll(alwaysCollection);
-        onceCollection.clear();
         arraySort(nodeArray);
+        onceCollection.clear();
         return nodeArray;
     }
 
