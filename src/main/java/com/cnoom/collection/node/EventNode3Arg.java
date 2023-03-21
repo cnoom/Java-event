@@ -1,6 +1,7 @@
-package com.cnoom.node;
+package com.cnoom.collection.node;
 
 
+import com.cnoom.base.BaseNode;
 import com.cnoom.base.Event3Arg;
 
 public class EventNode3Arg<T1, T2, T3> extends BaseNode implements Event3Arg<T1, T2, T3> {
@@ -13,6 +14,6 @@ public class EventNode3Arg<T1, T2, T3> extends BaseNode implements Event3Arg<T1,
 
     @Override
     public void invoke(T1 t1, T2 t2, T3 t3) {
-        event.invoke(t1,t2,t3);
+        event.invoke(t1, t2, t3);
     }
 }

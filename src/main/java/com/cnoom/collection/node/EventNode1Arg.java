@@ -1,6 +1,7 @@
-package com.cnoom.node;
+package com.cnoom.collection.node;
 
 
+import com.cnoom.base.BaseNode;
 import com.cnoom.base.Event1Arg;
 
 public class EventNode1Arg<T> extends BaseNode implements Event1Arg<T> {

@@ -1,4 +1,6 @@
-import com.cnoom.node.EventNodeFactory;
+package event;
+
+import com.cnoom.collection.node.EventNodeFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

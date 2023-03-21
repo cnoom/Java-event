@@ -1,4 +1,4 @@
-package com.cnoom.node;
+package com.cnoom.collection.node;
 
 
 import com.cnoom.base.Event;

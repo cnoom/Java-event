@@ -2,9 +2,9 @@ package com.cnoom.collection;
 
 
 import com.cnoom.base.Event;
-import com.cnoom.node.EventNode;
+import com.cnoom.collection.node.EventNode;
 
-public class EventCollection extends BaseNodeCollection<EventNode> implements Event {
+public class EventCollection extends BaseEventCollection<EventNode> implements Event {
 
     @Override
     public void invoke() {

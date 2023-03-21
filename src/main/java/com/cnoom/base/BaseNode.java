@@ -1,6 +1,5 @@
-package com.cnoom.node;
+package com.cnoom.base;
 
-import com.cnoom.base.BaseEvent;
 import lombok.Getter;
 import lombok.Setter;
 

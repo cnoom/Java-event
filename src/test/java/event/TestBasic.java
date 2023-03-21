@@ -1,6 +1,8 @@
+package event;
+
 import com.cnoom.collection.EventCollection;
-import com.cnoom.node.EventNode;
-import com.cnoom.node.EventNodeFactory;
+import com.cnoom.collection.node.EventNode;
+import com.cnoom.collection.node.EventNodeFactory;
 
 
 public class TestBasic {
