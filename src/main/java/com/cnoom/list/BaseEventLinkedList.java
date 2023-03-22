@@ -15,12 +15,12 @@ import java.util.TreeMap;
  * 事件节点完成时需要调用Counter.eventDone()
  */
 public abstract class BaseEventLinkedList<T extends BaseListNode> {
+    @Getter
+    private final int order = 0;
     protected boolean isHas;
     ArrayList<T> alwaysList = new ArrayList<>();
     ArrayList<T> onceList = new ArrayList<>();
     ArrayList<ArrayList<T>> invokeList = new ArrayList<>();
-    @Getter
-    private final int order = 0;
 
     public T addNode(int order, int priority, T t) {
         return addNode(order, priority, false, t);
@@ -42,7 +42,7 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
             alwaysList.add(t);
         }
         return t;
-    }    private final Counter counter = new Counter(this::nextOrder);
+    }
 
     public void initPlayList() {
         ArrayList<T> list = new ArrayList<>();
@@ -62,7 +62,7 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
             value.sort(BaseNode::compareTo);
             invokeList.add(value);
         }
-    }
+    }    private final Counter counter = new Counter(this::nextOrder);
 
     public boolean removeNode(T t) {
         boolean ok = alwaysList.remove(t);
@@ -70,6 +70,12 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
             ok = onceList.remove(t);
         }
         return ok;
+    }
+
+    public void clear() {
+        alwaysList.clear();
+        onceList.clear();
+        invokeList.clear();
     }
 
     protected void start() {
