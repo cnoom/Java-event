@@ -19,6 +19,8 @@ public class TestApply {
         linkedList.addNode(1,2,node(2,4000));
         linkedList.addNode(2,1,node(3,2000));
         linkedList.addNode(2,2,node(4,4000));
+        linkedList.addNode(3,3,node(5,6000));
+        linkedList.addNode(4,1,node(6,5000));
         linkedList.invoke();
     }
 

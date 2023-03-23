@@ -11,6 +11,7 @@ public class EventLinkedList1Arg<T> extends BaseEventLinkedList<ListNode1Arg<T>>
     @Override
     public void invoke(T t) {
         this.t = t;
+        start();
     }
 
     @Override

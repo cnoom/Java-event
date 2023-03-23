@@ -14,6 +14,7 @@ public class EventLinkedList2Arg<T1, T2> extends BaseEventLinkedList<ListNode2Ar
     public void invoke(T1 t1, T2 t2) {
         this.t1 = t1;
         this.t2 = t2;
+        start();
     }
 
     @Override

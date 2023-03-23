@@ -17,7 +17,6 @@ import java.util.TreeMap;
 public abstract class BaseEventLinkedList<T extends BaseListNode> {
     @Getter
     private final int order = 0;
-    protected boolean isHas;
     ArrayList<T> alwaysList = new ArrayList<>();
     ArrayList<T> onceList = new ArrayList<>();
     ArrayList<ArrayList<T>> invokeList = new ArrayList<>();
@@ -79,8 +78,16 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
     }
 
     protected void start() {
+        initPlayList();
+        if(invokeList.size() == 0){
+            return;
+        }
         counter.initValue(invokeList.get(counter.index).size());
         invokeList(invokeList.get(counter.index));
+    }
+
+    public int size(){
+        return alwaysList.size()+ onceList.size();
     }
 
     abstract void invokeList(ArrayList<T> invokeList);

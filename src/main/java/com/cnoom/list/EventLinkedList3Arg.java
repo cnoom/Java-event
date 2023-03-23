@@ -16,6 +16,7 @@ public class EventLinkedList3Arg<T1, T2, T3> extends BaseEventLinkedList<ListNod
         this.t1 = t1;
         this.t2 = t2;
         this.t3 = t3;
+        start();
     }
 
     @Override
