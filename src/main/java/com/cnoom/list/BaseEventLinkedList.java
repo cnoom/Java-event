@@ -91,8 +91,8 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
             invokeList.clear();
             return;
         }
-        invokeList(invokeList.get(counter.index));
         counter.initValue(invokeList.get(counter.index).size());
+        invokeList(invokeList.get(counter.index));
     }
 
 
