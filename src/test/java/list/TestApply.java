@@ -13,44 +13,28 @@ public class TestApply {
     static int value = 0;
 
     public static void main(String[] arg){
-        ListNode node1 = new ListNode() {
-            @Override
-            protected void event() {
-                System.out.println("链式事件1");
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        System.out.println("链式事件1无事发生");
-                        eventEnd();
-                    }
-                },5000);
-            }
-        };
-        ListNode node2 = new ListNode() {
-            @Override
-            protected void event() {
-                System.out.println("链式事件2...");
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        System.out.println("链式事件2 value++");
-                        value++;
-                        eventEnd();
-                    }
-                },5000);
-            }
-        };
 
-        linkedList.addNode(1,1,node1);
-        linkedList.addNode(2,1,node2);
-//        linkedList.invoke();
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Assertions.assertEquals(1,value);
-            }
-        },10000);
-        System.out.println(    linkedList.removeNode(node1));
+
+        linkedList.addNode(1,1,node(1,2000));
+        linkedList.addNode(1,2,node(2,4000));
+        linkedList.addNode(2,1,node(3,2000));
+        linkedList.addNode(2,2,node(4,4000));
         linkedList.invoke();
+    }
+
+    private static ListNode node(final int i,final long t){
+        return new ListNode() {
+            @Override
+            protected void event() {
+                System.out.println("链式事件"+i);
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        System.out.println("链式事件"+i+"无事发生");
+                        eventEnd();
+                    }
+                },t);
+            }
+        };
     }
 }

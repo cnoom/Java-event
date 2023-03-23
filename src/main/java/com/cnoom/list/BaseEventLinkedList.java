@@ -79,8 +79,7 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
     }
 
     protected void start() {
-        counter.index = 0;
-        counter.value = invokeList.get(counter.index).size();
+        counter.initValue(invokeList.get(counter.index).size());
         invokeList(invokeList.get(counter.index));
     }
 
@@ -93,7 +92,10 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
             return;
         }
         invokeList(invokeList.get(counter.index));
+        counter.initValue(invokeList.get(counter.index).size());
     }
+
+
 
     public static class Counter {
         int index;
@@ -117,9 +119,9 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
             value = 0;
             index = 0;
         }
+
+        private void initValue(int size){
+            value = size;
+        }
     }
-
-
-
-
 }
