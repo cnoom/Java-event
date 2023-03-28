@@ -10,7 +10,6 @@ public class EventLinkedList extends BaseEventLinkedList<ListNode> implements Ev
 
     @Override
     public void invoke() {
-
         start();
     }
 

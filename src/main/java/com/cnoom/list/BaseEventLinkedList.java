@@ -15,8 +15,11 @@ import java.util.TreeMap;
  * 事件节点完成时需要调用Counter.eventDone()
  */
 public abstract class BaseEventLinkedList<T extends BaseListNode> {
+    /**
+     * 当前排在最后的事件顺序
+     */
     @Getter
-    private final int order = 0;
+    private int order = 0;
     ArrayList<T> alwaysList = new ArrayList<>();
     ArrayList<T> onceList = new ArrayList<>();
     ArrayList<ArrayList<T>> invokeList = new ArrayList<>();
@@ -35,6 +38,7 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
         t.setPriority(priority);
         t.setOnce(isOnce);
         t.setCounter(counter);
+        this.order = Math.max(order,this.order);
         if (isOnce) {
             onceList.add(t);
         } else {
