@@ -1,6 +1,5 @@
 package com.cnoom.list;
 
-import com.cnoom.base.BaseNode;
 import com.cnoom.base.Event;
 import com.cnoom.list.node.BaseListNode;
 import lombok.Getter;
@@ -15,14 +14,15 @@ import java.util.TreeMap;
  * 事件节点完成时需要调用Counter.eventDone()
  */
 public abstract class BaseEventLinkedList<T extends BaseListNode> {
+    private final Counter counter = new Counter(this::nextOrder);
+    NodeArray alwaysList = new NodeArray();
+    NodeArray onceList = new NodeArray();
+    ArrayList<ArrayList<T>> invokeList = new ArrayList<>();
     /**
      * 当前排在最后的事件顺序
      */
     @Getter
     private int order = 0;
-    ArrayList<T> alwaysList = new ArrayList<>();
-    ArrayList<T> onceList = new ArrayList<>();
-    ArrayList<ArrayList<T>> invokeList = new ArrayList<>();
 
     public T addNode(int order, int priority, T t) {
         return addNode(order, priority, false, t);
@@ -38,7 +38,7 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
         t.setPriority(priority);
         t.setOnce(isOnce);
         t.setCounter(counter);
-        this.order = Math.max(order,this.order);
+        this.order = Math.max(order, this.order);
         if (isOnce) {
             onceList.add(t);
         } else {
@@ -48,24 +48,30 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
     }
 
     public void initPlayList() {
-        ArrayList<T> list = new ArrayList<>();
+        NodeArray list = new NodeArray();
         list.addAll(alwaysList);
         list.addAll(onceList);
         onceList.clear();
-        TreeMap<Integer, ArrayList<T>> orderListMap = new TreeMap<>();
+        TreeMap<Integer, NodeArray> orderListMap = new TreeMap<>();
         //order sort
         for (T t : list) {
             if (!orderListMap.containsKey(t.getOrder())) {
-                orderListMap.put(t.getOrder(), new ArrayList<>());
+                orderListMap.put(t.getOrder(), new NodeArray());
             }
             orderListMap.get(t.getOrder()).add(t);
         }
-        //priority sort and set invokeList
-        for (ArrayList<T> value : orderListMap.values()) {
-            value.sort(BaseNode::compareTo);
+        //priority sort and set invokeList// 9582 5982 5892 5829
+        for (NodeArray value : orderListMap.values()) {
+            for (int i = 0; i < value.size(); i++) {
+                for (int j = i + 1; j < value.size(); j++) {
+                    if (value.get(i).getPriority() > value.get(j).getPriority()) {
+                        value.swap(i,j);
+                    }
+                }
+            }
             invokeList.add(value);
         }
-    }    private final Counter counter = new Counter(this::nextOrder);
+    }
 
     public boolean removeNode(T t) {
         boolean ok = alwaysList.remove(t);
@@ -83,15 +89,15 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
 
     protected void start() {
         initPlayList();
-        if(invokeList.size() == 0){
+        if (invokeList.size() == 0) {
             return;
         }
         counter.initValue(invokeList.get(counter.index).size());
         invokeList(invokeList.get(counter.index));
     }
 
-    public int size(){
-        return alwaysList.size()+ onceList.size();
+    public int size() {
+        return alwaysList.size() + onceList.size();
     }
 
     abstract void invokeList(ArrayList<T> invokeList);
@@ -105,8 +111,6 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
         counter.initValue(invokeList.get(counter.index).size());
         invokeList(invokeList.get(counter.index));
     }
-
-
 
     public static class Counter {
         int index;
@@ -131,8 +135,16 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
             index = 0;
         }
 
-        private void initValue(int size){
+        private void initValue(int size) {
             value = size;
+        }
+    }
+
+    protected class NodeArray extends ArrayList<T> {
+        protected void swap(int i, int j) {
+            T t = get(i);
+            set(i, get(j));
+            set(j, t);
         }
     }
 }
