@@ -13,6 +13,9 @@ public abstract class BaseListNode extends BaseNode {
     BaseEventLinkedList.Counter counter;
 
     protected void eventEnd() {
+        if(counter == null){
+            return;
+        }
         counter.eventDone();
     }
 }
