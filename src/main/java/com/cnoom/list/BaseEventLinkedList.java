@@ -73,6 +73,14 @@ public abstract class BaseEventLinkedList<T extends BaseListNode> {
         }
     }
 
+    public boolean containNode(T t){
+        boolean ok = alwaysList.contains(t);
+        if (!ok) {
+            ok = onceList.contains(t);
+        }
+        return ok;
+    }
+
     public boolean removeNode(T t) {
         boolean ok = alwaysList.remove(t);
         if (!ok) {
