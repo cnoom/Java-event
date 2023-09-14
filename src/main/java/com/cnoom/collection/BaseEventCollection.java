@@ -137,6 +137,10 @@ public class BaseEventCollection<T extends BaseNode> {
         return alwaysCollection.remove(node);
     }
 
+    public void clear(){
+        onceCollection.clear();
+        alwaysCollection.clear();
+    }
 
     /**
      * 获取唤醒时最后的新排序集合(once集合自动清空)
